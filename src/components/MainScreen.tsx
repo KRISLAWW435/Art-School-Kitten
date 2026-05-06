@@ -6,8 +6,8 @@ import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame } from './MiniGames';
 
-const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.png?raw=true';
-const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.png?raw=true';
+const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.webp?raw=true';
+const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.webp?raw=true';
 
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4 }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number }) {
   const circumference = 2 * Math.PI * radius;
@@ -105,7 +105,7 @@ export default function MainScreen() {
         <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-start lg:w-24 p-3 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
           
           {/* Level Circle */}
-          <div className="pointer-events-auto mb-0 lg:mb-8">
+          <div className="pointer-events-auto -mt-10 lg:mt-0 mb-0 lg:mb-8">
             <CircularProgress 
                value={xpProgress} 
                text={<span className="font-extrabold text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-br from-fuchsia-400 to-purple-600 drop-shadow-sm">{level}</span>}
@@ -153,7 +153,7 @@ export default function MainScreen() {
           </div>
 
           {/* Mobile Top Right Corner (Larger buttons for mobile) */}
-          <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto">
+          <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto mt-2">
              <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/50">
                 <span className="font-bold text-slate-800 text-base">{coins}</span>
                 <span className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-white">Р</span>
