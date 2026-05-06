@@ -94,7 +94,7 @@ export default function MainScreen() {
       animate={{ opacity: 1 }}
       className="flex flex-col h-screen w-full relative overflow-hidden"
       style={{ 
-        backgroundImage: `url(${bg1Img})`, 
+        backgroundImage: `url("${bg1Img}")`, 
         backgroundSize: 'cover', 
         backgroundPosition: 'center',
       }}

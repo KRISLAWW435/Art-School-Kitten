@@ -8,7 +8,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   return (
     <div 
       className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ backgroundImage: `url(${bg1Img})` }}
+      style={{ backgroundImage: `url("${bg1Img}")` }}
     >
       <div className="absolute inset-0 bg-white/40 backdrop-blur-sm pointer-events-none"></div>
 
