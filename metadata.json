@@ -1,0 +1,6 @@
+{
+  "name": "Art School AI Kitten",
+  "description": "A 2D tamagotchi-style game featuring an AI kitten from a digital arts school. The kitten chats about design and acts as a virtual friend.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
