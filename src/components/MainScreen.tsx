@@ -105,7 +105,7 @@ export default function MainScreen() {
         <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-start lg:w-24 p-3 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
           
           {/* Level Circle */}
-          <div className="pointer-events-auto -mt-10 lg:mt-0 mb-0 lg:mb-8">
+          <div className="pointer-events-auto -mt-20 lg:mt-0 mb-0 lg:mb-8">
             <CircularProgress 
                value={xpProgress} 
                text={<span className="font-extrabold text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-br from-fuchsia-400 to-purple-600 drop-shadow-sm">{level}</span>}

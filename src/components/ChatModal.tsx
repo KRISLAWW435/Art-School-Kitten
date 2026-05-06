@@ -143,7 +143,7 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
       animate={{ y: 0 }}
       exit={{ y: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className="fixed inset-x-0 bottom-0 top-16 md:top-auto md:h-[80vh] z-50 bg-slate-50 flex flex-col rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.15)] border-t border-slate-200 overflow-hidden"
+      className="fixed inset-x-0 bottom-0 top-0 md:top-auto md:h-[80vh] z-50 bg-slate-50 flex flex-col md:rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.15)] border-t border-slate-200 overflow-hidden"
     >
       <div className="flex justify-between items-center px-6 py-4 bg-white border-b border-slate-100 shadow-sm relative z-10">
         <div className="flex items-center gap-3">
@@ -198,7 +198,7 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
              </button>
          </div>
       ) : (
-        <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] flex flex-col gap-3">
+        <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] flex flex-col gap-3 pb-safe">
           {quickReplies.length > 0 && (
               <div 
                   ref={scrollRef}
@@ -206,7 +206,7 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
                   onMouseLeave={stopDragging}
                   onMouseUp={stopDragging}
                   onMouseMove={onDrag}
-                  className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide snap-x cursor-grab active:cursor-grabbing" 
+                  className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide snap-x cursor-grab active:cursor-grabbing max-w-full" 
                   style={{ scrollbarWidth: 'none' }}
               >
                   {quickReplies.map((reply, i) => (
@@ -220,7 +220,7 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
                   ))}
               </div>
           )}
-          <form onSubmit={handleSend} className="flex gap-2 items-center">
+          <form onSubmit={handleSend} className="flex gap-2 items-center w-full max-w-lg mx-auto">
             <button
                 type="button"
                 onClick={toggleVoice}
@@ -234,8 +234,14 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onFocus={(e) => {
+                // Focus scrolling for mobile
+                setTimeout(() => {
+                  e.target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }, 300);
+              }}
               placeholder="Напиши что-нибудь..."
-              className="flex-1 bg-slate-100 rounded-full px-6 py-3.5 outline-none focus:ring-2 focus:ring-blue-400 border border-transparent font-medium text-slate-800 placeholder-slate-400"
+              className="flex-1 bg-slate-100 rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-blue-400 border border-transparent font-medium text-slate-800 placeholder-slate-400 text-base"
             />
             <button
               type="submit"
