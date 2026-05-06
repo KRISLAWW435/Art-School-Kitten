@@ -5,7 +5,7 @@ import { useGameStore } from '../store/gameStore';
 import { processUserMessage } from '../engine/dialogueEngine';
 
 export const ChatModal = ({ onClose }: { onClose: () => void }) => {
-  const { messages, isSleeping, wakeUp, awaitingDialogueTopic } = useGameStore();
+  const { messages, isSleeping, wakeUp, awaitingDialogueTopic, tutorialStep, setTutorialStep } = useGameStore();
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [quickReplies, setQuickReplies] = useState<string[]>([]);
@@ -82,6 +82,10 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
 
     useGameStore.getState().addMessage({ sender: 'user', text });
     setQuickReplies([]); // hide immediately
+
+    if (tutorialStep === 3) {
+      setTutorialStep(null);
+    }
 
     setTimeout(() => {
        processUserMessage(text);

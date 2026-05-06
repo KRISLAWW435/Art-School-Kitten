@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useGameStore } from '../store/gameStore';
 
 export default function RegistrationScreen({ onComplete }: { onComplete: () => void }) {
-  const { setProfile, addMessage } = useGameStore();
+  const { setProfile, addMessage, setTutorialStep } = useGameStore();
   const [name, setName] = useState('');
   const [ageGroup, setAgeGroup] = useState<'5-7' | '8-10' | '11-14' | '15-17' | '18+'>('8-10');
   const [gender, setGender] = useState<'male' | 'female' | 'unknown'>('unknown');
@@ -11,19 +11,16 @@ export default function RegistrationScreen({ onComplete }: { onComplete: () => v
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
+    const playerName = name.trim();
 
     setProfile({
-      name: name.trim(),
+      name: playerName,
       ageGroup,
       gender,
       isSetup: true
     });
 
-    // Custom greeting for the new player
-    addMessage({
-      sender: 'randy',
-      text: `Приятно познакомиться, ${name.trim()}! 🐾 Начинаем наше приключение!`
-    });
+    setTutorialStep(0);
 
     onComplete();
   };

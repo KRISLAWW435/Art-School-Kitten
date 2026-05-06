@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ChevronRight } from 'lucide-react';
+import { Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { useGameStore } from '../store/gameStore';
 
 const welcomeCat = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat2.webp?raw=true';
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   const fullText = "Привет, я Рэнди, твой творческий друг!";
   const [displayText, setDisplayText] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const { soundEnabled, toggleSound } = useGameStore();
 
   useEffect(() => {
     let index = 0;
@@ -20,21 +23,54 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
         }
       }, 50);
       return () => clearInterval(interval);
-    }, 1500); // Wait for bubble to appear
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-between py-12 px-6 overflow-hidden bg-cover bg-center"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-between py-8 px-4 overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: 'url("https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bgst.webp?raw=true")' }}
     >
       <div className="absolute inset-0 backdrop-blur-[3px] pointer-events-none" />
 
+      {/* Utilities Header */}
+      <div className="relative z-30 w-full flex justify-between items-start px-4 md:px-8">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleSound}
+          className="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-white shadow-lg"
+        >
+          {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleFullscreen}
+          className="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-white shadow-lg"
+        >
+          {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+        </motion.button>
+      </div>
+
       {/* Top Section: Dialogue Bubble */}
-      <div className="relative z-20 w-full flex justify-center mt-4">
+      <div className="relative z-20 w-full flex justify-center mt-2 small-screen:mt-0">
         <motion.div
           initial={{ opacity: 0, y: -20, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -44,14 +80,14 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
             type: "spring",
             damping: 15
           }}
-          className="bg-white/90 backdrop-blur-md px-8 py-6 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-2 border-white/50 max-w-[340px] text-center relative"
+          className="bg-white/90 backdrop-blur-md px-6 py-5 md:px-8 md:py-6 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-2 border-white/50 max-w-[90%] md:max-w-[400px] text-center relative"
         >
-          <p className="text-slate-700 font-bold text-xl md:text-2xl leading-tight">
+          <p className="text-slate-700 font-bold text-lg md:text-2xl leading-tight">
             {displayText}
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 0.8, repeat: Infinity }}
-              className={displayText.length >= fullText.length ? "hidden" : "inline-block w-1.5 h-6 bg-blue-400 ml-1 translate-y-1"}
+              className={displayText.length >= fullText.length ? "hidden" : "inline-block w-1.5 h-5 md:h-6 bg-blue-400 ml-1 translate-y-1"}
             />
           </p>
           {/* Subtle bubble indicator at the bottom */}
@@ -59,22 +95,22 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
         </motion.div>
       </div>
 
-      <div className="relative flex flex-col items-center justify-center w-full max-w-lg mb-8">
+      <div className="relative flex flex-col items-center justify-end w-full max-w-lg mb-4 flex-1">
         {/* Randy Image */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, type: "spring", bounce: 0.3 }}
-          className="relative"
+          className="relative mb-6"
         >
           <motion.div
-             animate={{ y: [0, -15, 0] }}
+             animate={{ y: [0, -10, 0] }}
              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           >
               <img 
                 src={welcomeCat} 
                 alt="Рэнди" 
-                className="w-[85vw] max-w-[440px] h-auto drop-shadow-[0_30px_70px_rgba(0,0,0,0.2)] relative z-10"
+                className="w-[70vw] max-w-[380px] h-auto drop-shadow-[0_30px_70px_rgba(0,0,0,0.2)] relative z-10"
                 referrerPolicy="no-referrer"
               />
           </motion.div>
@@ -85,7 +121,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.5 }}
-          className="w-full max-w-[320px] mt-8 relative z-10"
+          className="w-full max-w-[280px] md:max-w-[320px] relative z-10"
         >
           <motion.button
             onClick={onNext}
@@ -100,7 +136,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 1.18 }}
-            className="w-full py-6 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 rounded-full text-white font-black text-2xl tracking-[0.25em] transition-all uppercase shadow-2xl"
+            className="w-full py-5 md:py-6 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 rounded-full text-white font-black text-xl md:text-2xl tracking-[0.2em] transition-all uppercase shadow-2xl"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             Начать

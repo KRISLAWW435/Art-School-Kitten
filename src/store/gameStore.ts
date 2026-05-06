@@ -47,6 +47,12 @@ export interface GameState {
   isSleeping: boolean;
   activeGame: string | null;
   awaitingDialogueTopic: string | null;
+  activeContext: {
+    type: string;
+    duration: number;
+    themeId: string;
+    data?: any;
+  } | null;
 
   // Actions
   initializeSession: () => void;
@@ -68,7 +74,11 @@ export interface GameState {
   addFriendship: (amount: number) => void;
   addMood: (amount: number) => void;
   setAwaitingDialogueTopic: (topic: string | null) => void;
+  setActiveContext: (context: GameState['activeContext']) => void;
+  setTutorialStep: (step: number | null) => void;
   resetGame: () => void;
+  
+  tutorialStep: number | null;
 }
 
 const initialState = {
@@ -96,6 +106,8 @@ const initialState = {
   isSleeping: false,
   activeGame: null,
   awaitingDialogueTopic: null,
+  activeContext: null,
+  tutorialStep: null,
 };
 
 export const useGameStore = create<GameState>()(
@@ -301,6 +313,10 @@ export const useGameStore = create<GameState>()(
       
       setAwaitingDialogueTopic: (topic) => set({ awaitingDialogueTopic: topic }),
       
+      setActiveContext: (context) => set({ activeContext: context }),
+      
+      setTutorialStep: (step) => set({ tutorialStep: step }),
+
       resetGame: () => {
         // Clear all storage for a true fresh start as requested
         localStorage.clear();

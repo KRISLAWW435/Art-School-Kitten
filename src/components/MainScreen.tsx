@@ -5,6 +5,7 @@ import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Max
 import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame } from './MiniGames';
+import TutorialOverlay from './TutorialOverlay';
 
 const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.webp?raw=true';
 const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.webp?raw=true';
@@ -105,7 +106,7 @@ export default function MainScreen() {
         <div className="flex flex-row lg:flex-col items-start lg:items-center justify-between lg:justify-start lg:w-24 p-4 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
           
           {/* Level Circle */}
-          <div className="pointer-events-auto lg:mt-0 mb-0 lg:mb-8">
+          <div id="level-panel" className="pointer-events-auto lg:mt-0 mb-0 lg:mb-8">
             <CircularProgress 
                value={xpProgress} 
                text={<span className="font-extrabold text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-br from-fuchsia-400 to-purple-600 drop-shadow-sm">{level}</span>}
@@ -119,21 +120,22 @@ export default function MainScreen() {
 
           {/* Desktop Left Stack: Coins, Shop, Sound, Fullscreen */}
           <div className="hidden lg:flex flex-col items-center gap-6 pointer-events-auto">
-            {/* Coins Display */}
-            <div className="flex flex-col items-center gap-1 group">
-               <div className="relative w-12 h-12 bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white overflow-hidden transition-transform group-hover:rotate-12">
-                  <span className="font-black text-white text-lg drop-shadow-md">Р</span>
-               </div>
-               <div className="font-black text-white drop-shadow-md text-sm">{coins}</div>
-            </div>
+             {/* Coins Display */}
+             <div id="coins-display" className="flex flex-col items-center gap-1 group">
+                <div className="relative w-12 h-12 bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white overflow-hidden transition-transform group-hover:rotate-12">
+                   <span className="font-black text-white text-lg drop-shadow-md">Р</span>
+                </div>
+                <div className="font-black text-white drop-shadow-md text-sm">{coins}</div>
+             </div>
 
-            {/* Shop Button */}
-            <button 
-              onClick={() => setIsShopOpen(true)}
-              className="w-14 h-14 bg-white/95 rounded-2xl flex items-center justify-center text-slate-600 shadow-lg hover:bg-white hover:text-indigo-500 transition-all hover:scale-110 active:scale-95 group"
-            >
-              <ShoppingBag size={28} />
-            </button>
+             {/* Shop Button */}
+             <button 
+               id="shop-button"
+               onClick={() => setIsShopOpen(true)}
+               className="w-14 h-14 bg-white/95 rounded-2xl flex items-center justify-center text-slate-600 shadow-lg hover:bg-white hover:text-indigo-500 transition-all hover:scale-110 active:scale-95 group"
+             >
+               <ShoppingBag size={28} />
+             </button>
 
             {/* Sound Button */}
             <button 
@@ -167,7 +169,7 @@ export default function MainScreen() {
 
           {/* Mobile Top Right Corner (Larger buttons for mobile) */}
           <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto">
-             <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/50">
+             <div id="shop-panel-mobile" className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/50">
                 <span className="font-bold text-slate-800 text-base">{coins}</span>
                 <span className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-white">Р</span>
                 <button onClick={() => setIsShopOpen(true)} className="ml-1 text-slate-500 flex items-center justify-center"><ShoppingBag size={20}/></button>
@@ -224,13 +226,16 @@ export default function MainScreen() {
           
           {/* Desktop Right Stack: Stats, MiniGames, Chat */}
           <div className="hidden lg:flex flex-col items-center gap-6 pointer-events-auto">
-             <CircularProgress value={stats.mood} icon={Smile} colorClass="stroke-pink-400" textClass="text-pink-500" label="Mood" sizeClass="w-14 h-14" radius={24} />
-             <CircularProgress value={stats.hunger} icon={Fish} colorClass="stroke-orange-400" textClass="text-orange-500" label="Hunger" sizeClass="w-14 h-14" radius={24} />
-             <CircularProgress value={stats.energy} icon={Zap} colorClass="stroke-yellow-400" textClass="text-yellow-500" label="Energy" sizeClass="w-14 h-14" radius={24} />
+             <div id="stats-panel" className="flex flex-col items-center gap-6">
+                <CircularProgress value={stats.mood} icon={Smile} colorClass="stroke-pink-400" textClass="text-pink-500" label="Mood" sizeClass="w-14 h-14" radius={24} />
+                <CircularProgress value={stats.hunger} icon={Fish} colorClass="stroke-orange-400" textClass="text-orange-500" label="Hunger" sizeClass="w-14 h-14" radius={24} />
+                <CircularProgress value={stats.energy} icon={Zap} colorClass="stroke-yellow-400" textClass="text-yellow-500" label="Energy" sizeClass="w-14 h-14" radius={24} />
+             </div>
              
              <div className="h-px w-12 bg-white/20 my-2" />
 
              <button 
+               id="games-button"
                onClick={() => setActiveMinigame('mouse')}
                className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:bg-emerald-600 transition-all hover:scale-110 active:scale-95"
              >
@@ -238,6 +243,7 @@ export default function MainScreen() {
              </button>
              
              <button
+               id="chat-button"
                onClick={() => setIsChatOpen(true)}
                className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-all hover:scale-110 active:scale-95"
              >
@@ -247,15 +253,15 @@ export default function MainScreen() {
 
           {/* Mobile Bottom Row (Larger for mobile) */}
           <div className="lg:hidden flex flex-row items-center gap-3 md:gap-4 pointer-events-auto w-full justify-between pb-2">
-             <div className="flex gap-2">
+             <div id="stats-panel-mobile" className="flex gap-2">
                 <CircularProgress value={stats.mood} icon={Smile} colorClass="stroke-pink-400" textClass="text-pink-500" label="Mood" sizeClass="w-14 h-14" radius={22} />
                 <CircularProgress value={stats.hunger} icon={Fish} colorClass="stroke-orange-400" textClass="text-orange-500" label="Hunger" sizeClass="w-14 h-14" radius={22} />
                 <CircularProgress value={stats.energy} icon={Zap} colorClass="stroke-yellow-400" textClass="text-yellow-500" label="Energy" sizeClass="w-14 h-14" radius={22} />
              </div>
              
              <div className="flex gap-3">
-                <button onClick={() => setActiveMinigame('mouse')} className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><Gamepad2 size={28}/></button>
-                <button onClick={() => setIsChatOpen(true)} className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><MessageCircle size={28}/></button>
+                <button id="games-button-mobile" onClick={() => setActiveMinigame('mouse')} className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><Gamepad2 size={28}/></button>
+                <button id="chat-button-mobile" onClick={() => setIsChatOpen(true)} className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><MessageCircle size={28}/></button>
              </div>
           </div>
 
@@ -272,6 +278,8 @@ export default function MainScreen() {
 
       {isShopOpen && <ShopModal onClose={() => setIsShopOpen(false)} />}
       {activeMinigame === 'mouse' && <CatchMouseGame onClose={() => setActiveMinigame(null)} />}
+
+      <TutorialOverlay />
 
     </motion.div>
   );

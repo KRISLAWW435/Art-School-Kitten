@@ -9,6 +9,11 @@
 @layer base {
   body {
     @apply antialiased text-slate-800 bg-slate-100;
+    cursor: none;
+  }
+  
+  a, button, [role="button"], input, select {
+    cursor: none !important;
   }
 }
 
