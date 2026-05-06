@@ -6,9 +6,8 @@ import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame } from './MiniGames';
 
-const BASE_URL = import.meta.env.BASE_URL;
-const bg1Img = `${BASE_URL}bg1.png`;
-const cat1Img = `${BASE_URL}cat1.png`;
+const bgImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/bg.png?raw=true';
+const catImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/cat.png?raw=true';
 
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4, tooltipPosition = "bottom" }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number, tooltipPosition?: "top" | "bottom" }) {
   const circumference = 2 * Math.PI * radius;
@@ -96,7 +95,7 @@ export default function MainScreen() {
       animate={{ opacity: 1 }}
       className="flex flex-col h-screen w-full relative overflow-hidden"
       style={{ 
-        backgroundImage: `url("${bg1Img}")`, 
+        backgroundImage: `url("${bgImg}")`, 
         backgroundSize: 'cover', 
         backgroundPosition: 'center',
       }}
@@ -162,7 +161,7 @@ export default function MainScreen() {
            onClick={() => { if (!isSleeping) pet(); }}
         >
            <img 
-               src={cat1Img} 
+               src={catImg} 
                alt="Randy the Kitten" 
                className={`w-[75vw] md:w-[450px] lg:w-[500px] h-auto object-contain transition-all duration-300 pointer-events-auto origin-bottom`}
                style={{ 

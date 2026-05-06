@@ -3,8 +3,7 @@ import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 
-const BASE_URL = import.meta.env.BASE_URL;
-const cat1Img = `${BASE_URL}cat1.png`;
+const catImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/cat.png?raw=true';
 
 export const RandyCat = () => {
    const { stats, isSleeping, pet, addMessage, addCoins } = useGameStore();
@@ -62,7 +61,7 @@ export const RandyCat = () => {
                onClick={handlePet}
            >
                <img 
-                   src={cat1Img} 
+                   src={catImg} 
                    alt="Randy the Kitten" 
                    className={`w-[60vw] md:w-[350px] lg:w-[400px] h-auto object-contain transition-all duration-300 ${isSleeping ? 'brightness-75 saturate-50' : 'group-hover:scale-105'}`}
                    style={{ filter: isSleeping ? 'brightness(0.7) sepia(0.3)' : 'drop-shadow(0 20px 30px rgba(0,0,0,0.15))' }}

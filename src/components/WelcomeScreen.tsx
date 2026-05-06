@@ -2,15 +2,14 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 
-const BASE_URL = import.meta.env.BASE_URL;
-const bg1Img = `${BASE_URL}bg1.png`;
-const cat1Img = `${BASE_URL}cat1.png`;
+const bgImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/bg.png?raw=true';
+const catImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/cat.png?raw=true';
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   return (
     <div 
       className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ backgroundImage: `url("${bg1Img}")` }}
+      style={{ backgroundImage: `url("${bgImg}")` }}
     >
       <div className="absolute inset-0 bg-white/40 backdrop-blur-sm pointer-events-none"></div>
 
@@ -39,7 +38,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
            className="my-4"
         >
           <img 
-            src={cat1Img} 
+            src={catImg} 
             alt="Рэнди" 
             className="w-64 h-auto drop-shadow-[0_20px_30px_rgba(0,0,0,0.2)] object-contain object-bottom pointer-events-none select-none"
             referrerPolicy="no-referrer"
