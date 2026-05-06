@@ -3,7 +3,7 @@ import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 
-const catImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/cat.png?raw=true';
+const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.png?raw=true';
 
 export const RandyCat = () => {
    const { stats, isSleeping, pet, addMessage, addCoins } = useGameStore();

@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 
-const bgImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/bg.png?raw=true';
-const catImg = 'https://github.com/KRISLAWW435/Art-School-Kitten/blob/main/public/cat.png?raw=true';
+const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.png?raw=true';
+const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.png?raw=true';
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   return (
