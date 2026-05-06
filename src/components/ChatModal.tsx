@@ -220,7 +220,7 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
                   ))}
               </div>
           )}
-          <form onSubmit={handleSend} className="flex gap-2 items-center w-full max-w-lg mx-auto">
+          <form onSubmit={handleSend} className="flex gap-2 items-center w-full max-w-xl mx-auto px-1">
             <button
                 type="button"
                 onClick={toggleVoice}

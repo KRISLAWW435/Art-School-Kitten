@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '../store/gameStore';
-import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Smile, Fish, Star } from 'lucide-react';
+import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Smile, Fish, Star, RotateCcw } from 'lucide-react';
 import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame } from './MiniGames';
@@ -38,7 +38,7 @@ function CircularProgress({ value, icon: Icon, colorClass, textClass, label, tex
 }
 
 export default function MainScreen() {
-  const { profile, coins, stats, isSleeping, pet, initializeSession, updateStats, level, xp, soundEnabled, toggleSound } = useGameStore();
+  const { profile, coins, stats, isSleeping, pet, initializeSession, updateStats, level, xp, soundEnabled, toggleSound, resetGame } = useGameStore();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [activeMinigame, setActiveMinigame] = useState<'mouse' | null>(null);
@@ -102,10 +102,10 @@ export default function MainScreen() {
       <div className="relative z-10 w-full h-full flex flex-col lg:flex-row overflow-hidden">
         
         {/* LEFT PANEL (Desktop: Column, Mobile: Absolute Top-Left) */}
-        <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-start lg:w-24 p-3 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
+        <div className="flex flex-row lg:flex-col items-start lg:items-center justify-between lg:justify-start lg:w-24 p-4 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
           
           {/* Level Circle */}
-          <div className="pointer-events-auto -mt-20 lg:mt-0 mb-0 lg:mb-8">
+          <div className="pointer-events-auto lg:mt-0 mb-0 lg:mb-8">
             <CircularProgress 
                value={xpProgress} 
                text={<span className="font-extrabold text-2xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-br from-fuchsia-400 to-purple-600 drop-shadow-sm">{level}</span>}
@@ -150,10 +150,23 @@ export default function MainScreen() {
             >
               {isFullscreen ? <Minimize size={28} /> : <Maximize size={28} />}
             </button>
+
+            {/* Reset Button */}
+            <button 
+              onClick={() => {
+                if (confirm('Вы уверены, что хотите сбросить игру? Весь прогресс будет удален!')) {
+                  resetGame();
+                }
+              }}
+              className="w-14 h-14 bg-white/95 rounded-2xl flex items-center justify-center text-red-400 shadow-lg hover:bg-red-50 transition-all hover:scale-110 active:scale-95"
+              title="Сбросить игру"
+            >
+              <RotateCcw size={28} />
+            </button>
           </div>
 
           {/* Mobile Top Right Corner (Larger buttons for mobile) */}
-          <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto mt-2">
+          <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto">
              <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/50">
                 <span className="font-bold text-slate-800 text-base">{coins}</span>
                 <span className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-white">Р</span>
@@ -165,6 +178,16 @@ export default function MainScreen() {
                 </button>
                 <button onClick={toggleFullscreen} className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform">
                    <Maximize size={24}/>
+                </button>
+                <button 
+                   onClick={() => {
+                     if (confirm('Сбросить игру?')) {
+                       resetGame();
+                     }
+                   }} 
+                   className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform text-red-500"
+                >
+                   <RotateCcw size={24}/>
                 </button>
              </div>
           </div>

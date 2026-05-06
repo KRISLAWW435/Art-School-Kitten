@@ -68,39 +68,44 @@ export interface GameState {
   addFriendship: (amount: number) => void;
   addMood: (amount: number) => void;
   setAwaitingDialogueTopic: (topic: string | null) => void;
+  resetGame: () => void;
 }
+
+const initialState = {
+  stats: {
+    hunger: 80,
+    energy: 100,
+    mood: 80,
+    friendship: 0,
+  },
+  coins: 50,
+  xp: 0,
+  level: 1,
+  soundEnabled: true,
+  inventory: {
+    accessories: [],
+    food: {},
+  },
+  equipped: { accessory: null },
+  profile: {
+    name: 'Друг',
+    ageGroup: '8-10' as const,
+    gender: 'unknown' as const,
+    isSetup: false,
+  },
+  isSleeping: false,
+  activeGame: null,
+  awaitingDialogueTopic: null,
+};
 
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
-      stats: {
-        hunger: 80,
-        energy: 100,
-        mood: 80,
-        friendship: 0,
-      },
-      coins: 50,
-      xp: 0,
-      level: 1,
-      soundEnabled: true,
-      inventory: {
-        accessories: [],
-        food: {},
-      },
-      equipped: { accessory: null },
-      profile: {
-        name: 'Друг',
-        ageGroup: '8-10',
-        gender: 'unknown',
-        isSetup: false,
-      },
+      ...initialState,
       lastSessionTime: Date.now(),
       lastLoginDate: new Date().toDateString(),
       consecutiveDays: 1,
       messages: [{ id: 'welcome_1', sender: 'randy', text: 'Мяу! Привет! Я Рэнди. Давай дружить и изучать искусство? 😺🎨', timestamp: Date.now() }],
-      isSleeping: false,
-      activeGame: null,
-      awaitingDialogueTopic: null,
 
       initializeSession: () => {
         const { lastSessionTime, updateStats, lastLoginDate, consecutiveDays } = get();
@@ -294,7 +299,19 @@ export const useGameStore = create<GameState>()(
       addFriendship: (amount) => set((state) => ({ stats: { ...state.stats, friendship: state.stats.friendship + amount } })),
       addMood: (amount) => set((state) => ({ stats: { ...state.stats, mood: Math.min(100, state.stats.mood + amount) } })),
       
-      setAwaitingDialogueTopic: (topic) => set({ awaitingDialogueTopic: topic })
+      setAwaitingDialogueTopic: (topic) => set({ awaitingDialogueTopic: topic }),
+      
+      resetGame: () => {
+        localStorage.removeItem('renderia-cat-storage');
+        set({
+          ...initialState,
+          messages: [{ id: 'welcome_1', sender: 'randy', text: 'Мяу! Привет! Я Рэнди. Давай дружить и изучать искусство? 😺🎨', timestamp: Date.now() }],
+          lastSessionTime: Date.now(),
+          lastLoginDate: new Date().toDateString(),
+          consecutiveDays: 1,
+        });
+        window.location.reload();
+      }
 
     }),
     {
