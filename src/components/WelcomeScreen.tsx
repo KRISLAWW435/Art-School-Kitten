@@ -8,7 +8,7 @@ const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.png
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   return (
     <div 
-      className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center relative overflow-hidden"
+      className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center relative overflow-hidden bg-indigo-950"
       style={{ backgroundImage: `url("${bgImg}")` }}
     >
       <div className="absolute inset-0 bg-white/40 backdrop-blur-sm pointer-events-none"></div>

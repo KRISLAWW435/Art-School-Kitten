@@ -90,19 +90,19 @@ export default function MainScreen() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex h-screen w-full relative overflow-hidden bg-slate-100"
+      className="flex h-[100dvh] w-full relative overflow-hidden bg-slate-100"
     >
       {/* Background container for the cat (Desktop: centered, Mobile: full) */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-700"
+        className="absolute inset-0 z-0 bg-cover bg-center transition-all duration-700 bg-indigo-950"
         style={{ backgroundImage: `url("${bgImg}")` }}
       />
 
       {/* Main Layout Overlay */}
-      <div className="relative z-10 w-full h-full flex flex-col lg:flex-row">
+      <div className="relative z-10 w-full h-full flex flex-col lg:flex-row overflow-hidden">
         
         {/* LEFT PANEL (Desktop: Column, Mobile: Absolute Top-Left) */}
-        <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-start lg:w-24 p-4 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20">
+        <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-start lg:w-24 p-3 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
           
           {/* Level Circle */}
           <div className="pointer-events-auto mb-0 lg:mb-8">
@@ -112,6 +112,8 @@ export default function MainScreen() {
                colorClass="stroke-fuchsia-500" 
                textClass="hover:scale-110 transition-transform" 
                label="Level" 
+               sizeClass="w-14 h-14 md:w-20 md:h-20"
+               radius={22}
             />
           </div>
 
@@ -150,30 +152,34 @@ export default function MainScreen() {
             </button>
           </div>
 
-          {/* Mobile Top Right Corner (Simplified for mobile) */}
+          {/* Mobile Top Right Corner (Larger buttons for mobile) */}
           <div className="lg:hidden flex flex-col items-end gap-3 pointer-events-auto">
-             <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-md border border-white/50">
-                <span className="font-bold text-slate-800 text-sm">{coins}</span>
-                <span className="w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center text-[10px] font-black text-white">Р</span>
-                <button onClick={() => setIsShopOpen(true)} className="ml-1 text-slate-500"><ShoppingBag size={18}/></button>
+             <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/50">
+                <span className="font-bold text-slate-800 text-base">{coins}</span>
+                <span className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-white">Р</span>
+                <button onClick={() => setIsShopOpen(true)} className="ml-1 text-slate-500 flex items-center justify-center"><ShoppingBag size={20}/></button>
              </div>
-             <div className="flex flex-col gap-2 scale-90 origin-top-right">
-                <button onClick={toggleSound} className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md">{soundEnabled ? <Volume2 size={20}/> : <VolumeX size={20}/>}</button>
-                <button onClick={toggleFullscreen} className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md"><Maximize size={20}/></button>
+             <div className="flex flex-col gap-2">
+                <button onClick={toggleSound} className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform">
+                   {soundEnabled ? <Volume2 size={24}/> : <VolumeX size={24}/>}
+                </button>
+                <button onClick={toggleFullscreen} className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform">
+                   <Maximize size={24}/>
+                </button>
              </div>
           </div>
         </div>
 
         {/* CENTER AREA (KITTEN) */}
-        <div className="flex-1 flex flex-col items-center justify-end md:justify-center relative p-8">
+        <div className="flex-1 flex flex-col items-center justify-center relative p-4 overflow-hidden">
            <div 
-              className="relative cursor-pointer group lg:mt-24"
+              className="relative cursor-pointer group lg:mt-24 max-h-full"
               onClick={() => { if (!isSleeping) pet(); }}
            >
               <img 
                   src={catImg} 
                   alt="Randy the Kitten" 
-                  className="w-[70vw] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto object-contain transition-transform duration-300 pointer-events-auto origin-bottom hover:scale-105"
+                  className="w-[75vw] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto max-h-[50vh] md:max-h-full object-contain transition-transform duration-300 pointer-events-auto origin-bottom hover:scale-105"
                   style={{ 
                     filter: isSleeping ? 'brightness(0.7) sepia(0.3)' : 'drop-shadow(0 30px 40px rgba(0,0,0,0.3))',
                     userSelect: 'none',
@@ -183,7 +189,7 @@ export default function MainScreen() {
                   draggable={false}
               />
               {isSleeping && (
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-white font-black text-5xl font-mono animate-bounce drop-shadow-2xl">
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-white font-black text-4xl md:text-5xl font-mono animate-bounce drop-shadow-2xl">
                       Zzz...
                   </div>
               )}
@@ -191,7 +197,7 @@ export default function MainScreen() {
         </div>
 
         {/* RIGHT PANEL (Desktop: Column, Mobile: Absolute Bottom) */}
-        <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-between lg:w-24 p-4 lg:p-6 lg:h-full lg:bg-white/10 lg:backdrop-blur-md lg:border-l lg:border-white/20">
+        <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-between lg:w-24 p-3 lg:p-6 lg:h-full lg:bg-white/10 lg:backdrop-blur-md lg:border-l lg:border-white/20 shrink-0">
           
           {/* Desktop Right Stack: Stats, MiniGames, Chat */}
           <div className="hidden lg:flex flex-col items-center gap-6 pointer-events-auto">
@@ -216,17 +222,17 @@ export default function MainScreen() {
              </button>
           </div>
 
-          {/* Mobile Bottom Row */}
-          <div className="lg:hidden flex flex-row items-center gap-3 md:gap-4 pointer-events-auto w-full justify-between px-2">
+          {/* Mobile Bottom Row (Larger for mobile) */}
+          <div className="lg:hidden flex flex-row items-center gap-3 md:gap-4 pointer-events-auto w-full justify-between pb-2">
              <div className="flex gap-2">
-                <CircularProgress value={stats.mood} icon={Smile} colorClass="stroke-pink-400" textClass="text-pink-500" label="Mood" sizeClass="w-12 h-12" radius={20} />
-                <CircularProgress value={stats.hunger} icon={Fish} colorClass="stroke-orange-400" textClass="text-orange-500" label="Hunger" sizeClass="w-12 h-12" radius={20} />
-                <CircularProgress value={stats.energy} icon={Zap} colorClass="stroke-yellow-400" textClass="text-yellow-500" label="Energy" sizeClass="w-12 h-12" radius={20} />
+                <CircularProgress value={stats.mood} icon={Smile} colorClass="stroke-pink-400" textClass="text-pink-500" label="Mood" sizeClass="w-14 h-14" radius={22} />
+                <CircularProgress value={stats.hunger} icon={Fish} colorClass="stroke-orange-400" textClass="text-orange-500" label="Hunger" sizeClass="w-14 h-14" radius={22} />
+                <CircularProgress value={stats.energy} icon={Zap} colorClass="stroke-yellow-400" textClass="text-yellow-500" label="Energy" sizeClass="w-14 h-14" radius={22} />
              </div>
              
              <div className="flex gap-3">
-                <button onClick={() => setActiveMinigame('mouse')} className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md"><Gamepad2 size={24}/></button>
-                <button onClick={() => setIsChatOpen(true)} className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md"><MessageCircle size={24}/></button>
+                <button onClick={() => setActiveMinigame('mouse')} className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><Gamepad2 size={28}/></button>
+                <button onClick={() => setIsChatOpen(true)} className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><MessageCircle size={28}/></button>
              </div>
           </div>
 
