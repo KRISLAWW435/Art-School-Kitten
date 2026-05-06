@@ -302,15 +302,11 @@ export const useGameStore = create<GameState>()(
       setAwaitingDialogueTopic: (topic) => set({ awaitingDialogueTopic: topic }),
       
       resetGame: () => {
-        localStorage.removeItem('renderia-cat-storage');
-        set({
-          ...initialState,
-          messages: [{ id: 'welcome_1', sender: 'randy', text: 'Мяу! Привет! Я Рэнди. Давай дружить и изучать искусство? 😺🎨', timestamp: Date.now() }],
-          lastSessionTime: Date.now(),
-          lastLoginDate: new Date().toDateString(),
-          consecutiveDays: 1,
-        });
-        window.location.reload();
+        // Clear all storage for a true fresh start as requested
+        localStorage.clear();
+        sessionStorage.clear();
+        // Redirect to clean URL
+        window.location.replace(window.location.origin + window.location.pathname);
       }
 
     }),

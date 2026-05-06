@@ -220,12 +220,12 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
                   ))}
               </div>
           )}
-          <form onSubmit={handleSend} className="flex gap-2 items-center w-full max-w-xl mx-auto px-1">
+          <form onSubmit={handleSend} className="flex gap-2 items-center w-full max-w-2xl mx-auto relative -left-2 md:-left-3 px-2">
             <button
                 type="button"
                 onClick={toggleVoice}
-                className={`w-12 h-12 rounded-full flex flex-col items-center justify-center shrink-0 transition-colors border ${
-                    isListening ? 'bg-red-100 text-red-500 border-red-200 animate-pulse' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border-slate-200'
+                className={`w-11 h-11 rounded-full flex flex-col items-center justify-center shrink-0 transition-colors border ${
+                    isListening ? 'bg-red-500 text-white border-red-600 animate-pulse' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border-slate-200'
                 }`}
             >
                 <Mic size={20} />
@@ -241,14 +241,14 @@ export const ChatModal = ({ onClose }: { onClose: () => void }) => {
                 }, 300);
               }}
               placeholder="Напиши что-нибудь..."
-              className="flex-1 bg-slate-100 rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-blue-400 border border-transparent font-medium text-slate-800 placeholder-slate-400 text-base"
+              className="flex-1 bg-slate-100 rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-blue-400 border border-transparent font-medium text-slate-800 placeholder-slate-400 text-base shadow-inner"
             />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="w-12 h-12 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-full flex flex-col items-center justify-center shrink-0 transition-all shadow-md shadow-blue-500/30 disabled:shadow-none"
+              className="w-11 h-11 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-full flex flex-col items-center justify-center shrink-0 transition-all shadow-md shadow-blue-500/20 disabled:shadow-none"
             >
-              <Send size={18} className="translate-x-[1px]" />
+              <Send size={18} />
             </button>
           </form>
         </div>
