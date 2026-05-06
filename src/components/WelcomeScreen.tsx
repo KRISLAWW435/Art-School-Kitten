@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
-import bg1Img from '../assets/bg1.png';
-import cat1Img from '../assets/cat1.png';
+
+const BASE_URL = import.meta.env.BASE_URL;
+const bg1Img = `${BASE_URL}bg1.png`;
+const cat1Img = `${BASE_URL}cat1.png`;
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   return (

@@ -5,8 +5,10 @@ import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Max
 import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame } from './MiniGames';
-import bg1Img from '../assets/bg1.png';
-import cat1Img from '../assets/cat1.png';
+
+const BASE_URL = import.meta.env.BASE_URL;
+const bg1Img = `${BASE_URL}bg1.png`;
+const cat1Img = `${BASE_URL}cat1.png`;
 
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4, tooltipPosition = "bottom" }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number, tooltipPosition?: "top" | "bottom" }) {
   const circumference = 2 * Math.PI * radius;

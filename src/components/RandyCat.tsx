@@ -2,7 +2,9 @@ import React, { useRef, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
-import cat1Img from '../assets/cat1.png';
+
+const BASE_URL = import.meta.env.BASE_URL;
+const cat1Img = `${BASE_URL}cat1.png`;
 
 export const RandyCat = () => {
    const { stats, isSleeping, pet, addMessage, addCoins } = useGameStore();
