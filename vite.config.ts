@@ -8,7 +8,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: './',
+    base: process.env.VITE_BASE_URL || './',
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),

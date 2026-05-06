@@ -29,12 +29,15 @@ jobs:
           node-version: 20
           
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
         run: npm install
 
       - name: Build project
+        env:
+          VITE_BASE_URL: ${{ steps.pages.outputs.base_path }}/
         run: npm run build
 
       - name: Upload artifact
