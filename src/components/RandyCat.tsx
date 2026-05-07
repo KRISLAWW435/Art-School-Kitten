@@ -22,8 +22,9 @@ export const RandyCat = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       
-      setHearts(prev => [...prev, { id: Date.now(), x, y }]);
-      setTimeout(() => setHearts(prev => prev.filter(h => h.id !== Date.now())), 1000); // Wait for transition
+      const heartId = Date.now() + Math.random();
+      setHearts(prev => [...prev, { id: heartId, x, y }]);
+      setTimeout(() => setHearts(prev => prev.filter(h => h.id !== heartId)), 1000); // Wait for transition
 
       // Bonus milestone
       if (clickCount.current % 20 === 0) {
@@ -85,7 +86,7 @@ export const RandyCat = () => {
                            animate={{ opacity: 0, y: h.y - 100, scale: 1.5 }}
                            exit={{ opacity: 0 }}
                            transition={{ duration: 1 }}
-                           className="absolute text-pink-400 text-2xl font-bold pointer-events-none"
+                           className="absolute text-pink-400 text-2xl font-bold pointer-events-none will-change-transform"
                        >
                            💖
                        </motion.div>
