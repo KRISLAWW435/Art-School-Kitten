@@ -2,8 +2,9 @@ import React, { useRef, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
+import { getAssetUrl } from '../utils/assets';
 
-const catImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp';
+const catImg = getAssetUrl('cat/cat.webp');
 
 export const RandyCat = () => {
    const { stats, isSleeping, pet, addMessage, addCoins } = useGameStore();
@@ -57,7 +58,7 @@ export const RandyCat = () => {
            <motion.div
                animate={{ y: yAnim }}
                transition={{ repeat: Infinity, duration, ease: "easeInOut" }}
-               className="relative cursor-pointer group"
+               className="relative cursor-pointer group will-change-transform"
                onClick={handlePet}
            >
                <img 

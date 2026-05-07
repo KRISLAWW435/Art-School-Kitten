@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
+import { getAssetUrl } from '../utils/assets';
 
-const welcomeCat = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat2.webp';
+const welcomeCat = getAssetUrl('cat/cat2.webp');
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   const fullText = "Привет, я Рэнди, твой творческий друг!";
@@ -44,7 +45,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-[100] flex flex-col items-center justify-between py-8 px-4 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: 'url("https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bgst.webp")' }}
+      style={{ backgroundImage: `url("${getAssetUrl('bg/bgst.webp')}")` }}
     >
       <div className="absolute inset-0 backdrop-blur-[3px] pointer-events-none" />
 
@@ -106,6 +107,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
           <motion.div
              animate={{ y: [0, -10, 0] }}
              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+             className="will-change-transform"
           >
               <img 
                 src={welcomeCat} 

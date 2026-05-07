@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameStore } from './store/gameStore';
+import { getAssetUrl } from './utils/assets';
 import WelcomeScreen from './components/WelcomeScreen';
 import RegistrationScreen from './components/RegistrationScreen';
 import MainScreen from './components/MainScreen';
@@ -8,13 +9,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Loader2 } from 'lucide-react';
 
 const PRELOAD_IMAGES = [
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat2.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bgst.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bg1.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp',
+  getAssetUrl('cat/cat2.webp'),
+  getAssetUrl('bg/bgst.webp'),
+  getAssetUrl('bg/bg1.webp'),
+  getAssetUrl('cat/cat.webp'),
+  getAssetUrl('cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp'),
+  getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp'),
+  getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp'),
 ];
 
 export default function App() {
@@ -28,24 +29,33 @@ export default function App() {
     const totalImages = PRELOAD_IMAGES.length;
 
     const loadImages = async () => {
-      const imagePromises = PRELOAD_IMAGES.map((src) => {
+      const loadWithRetry = (src: string, retries = 3): Promise<boolean> => {
         return new Promise((resolve) => {
           const img = new Image();
           img.referrerPolicy = "no-referrer";
           img.src = src;
-          img.onload = () => {
-            if (!mounted) return;
-            loadedCount++;
-            setLoadingProgress(Math.round((loadedCount / totalImages) * 100));
-            resolve(true);
-          };
+          img.onload = () => resolve(true);
           img.onerror = () => {
-            if (!mounted) return;
-            loadedCount++;
-            setLoadingProgress(Math.round((loadedCount / totalImages) * 100));
-            resolve(false); // resolve even on error to not block forever
+            if (retries > 0) {
+              console.warn(`Failed to load ${src}, retrying... (${retries} left)`);
+              setTimeout(() => {
+                resolve(loadWithRetry(src, retries - 1));
+              }, 1000);
+            } else {
+              console.error(`Failed to load ${src} after multiple attempts.`);
+              resolve(false);
+            }
           };
         });
+      };
+
+      const imagePromises = PRELOAD_IMAGES.map(async (src) => {
+         const result = await loadWithRetry(src);
+         if (mounted) {
+            loadedCount++;
+            setLoadingProgress(Math.round((loadedCount / totalImages) * 100));
+         }
+         return result;
       });
 
       await Promise.all(imagePromises);

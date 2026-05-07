@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, useMotionValue, useSpring } from 'motion/react';
+import { getAssetUrl } from '../utils/assets';
 
-const pawPointer = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp';
-const pawStatic = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp';
+const pawPointer = getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp');
+const pawStatic = getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp');
 
 export default function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
+  const cursorX = useSpring(mouseX, springConfig);
+  const cursorY = useSpring(mouseY, springConfig);
+
   const [isPointer, setIsPointer] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+      setIsTouchDevice(true);
+      return;
+    }
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      mouseX.set(e.clientX - 24);
+      mouseY.set(e.clientY - 12);
       setIsVisible(true);
 
       const target = e.target as HTMLElement;
@@ -39,14 +52,16 @@ export default function CustomCursor() {
     };
   }, []);
 
-  if (!isVisible) return null;
+  if (isTouchDevice || !isVisible) return null;
 
   return (
     <motion.div
-      className="fixed top-0 left-0 z-[9999] pointer-events-none"
+      className="fixed top-0 left-0 z-[9999] pointer-events-none hidden lg:block will-change-transform"
+      style={{
+        x: cursorX,
+        y: cursorY,
+      }}
       animate={{
-        x: position.x - 24,
-        y: position.y - 12,
         scale: isPointer ? 1.2 : 1,
       }}
       transition={{

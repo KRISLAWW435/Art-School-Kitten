@@ -1,12 +1,12 @@
-const CACHE_NAME = 'kitten-game-cache-v1';
+const CACHE_NAME = 'kitten-game-cache-v2';
 const PRECACHE_URLS = [
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat2.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bgst.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bg1.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp',
-  'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp'
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/cat2.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/bg/bgst.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/bg/bg1.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/cat.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp',
+  'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp'
 ];
 
 self.addEventListener('install', (event) => {

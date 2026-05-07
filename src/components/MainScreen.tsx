@@ -6,10 +6,11 @@ import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame, DrawingGame, MemoryMatchGame } from './MiniGames';
 import TutorialOverlay from './TutorialOverlay';
+import { getAssetUrl } from '../utils/assets';
 
-const bgImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bg1.webp';
-const catImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp';
-const purringCatImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp';
+const bgImg = getAssetUrl('bg/bg1.webp');
+const catImg = getAssetUrl('cat/cat.webp');
+const purringCatImg = getAssetUrl('cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp');
 
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4 }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number }) {
   const circumference = 2 * Math.PI * radius;
@@ -241,7 +242,6 @@ export default function MainScreen() {
               <img 
                   src={(isPurring && !isSleeping) ? purringCatImg : catImg} 
                   alt="Randy the Kitten" 
-                  referrerPolicy="no-referrer"
                   className="w-[75vw] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto max-h-[50vh] md:max-h-full object-contain transition-transform duration-300 pointer-events-auto origin-bottom hover:scale-105"
                   style={{ 
                     filter: isSleeping ? 'brightness(0.7) sepia(0.3)' : 'drop-shadow(0 30px 40px rgba(0,0,0,0.3))',

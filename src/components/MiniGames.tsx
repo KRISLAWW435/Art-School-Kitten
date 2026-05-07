@@ -98,7 +98,7 @@ export const CatchMouseGame = ({ onClose }: { onClose: () => void }) => {
             <motion.div
               animate={{ left: `${mousePos.x}%`, top: `${mousePos.y}%` }}
               transition={{ type: "spring", damping: 12, stiffness: 100 }}
-              className="absolute -translate-x-1/2 -translate-y-1/2 text-4xl select-none"
+              className="absolute -translate-x-1/2 -translate-y-1/2 text-4xl select-none will-change-transform"
               onMouseDown={handleCatch}
               onTouchStart={handleCatch}
             >
