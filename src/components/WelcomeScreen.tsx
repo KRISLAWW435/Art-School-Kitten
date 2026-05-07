@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 
-const welcomeCat = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat2.webp?raw=true';
+const welcomeCat = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat2.webp';
 
 export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
   const fullText = "Привет, я Рэнди, твой творческий друг!";
@@ -44,7 +44,7 @@ export default function WelcomeScreen({ onNext }: { onNext: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-[100] flex flex-col items-center justify-between py-8 px-4 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: 'url("https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bgst.webp?raw=true")' }}
+      style={{ backgroundImage: 'url("https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bgst.webp")' }}
     >
       <div className="absolute inset-0 backdrop-blur-[3px] pointer-events-none" />
 

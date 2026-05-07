@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '../store/gameStore';
 
-const pawPointer = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp?raw=true';
-const pawStatic = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp?raw=true';
+const pawPointer = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp';
+const pawStatic = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp';
 
 interface TutorialStep {
   targetId: string | null;

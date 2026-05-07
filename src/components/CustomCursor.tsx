@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 
-const pawPointer = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp?raw=true';
-const pawStatic = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp?raw=true';
+const pawPointer = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp';
+const pawStatic = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp';
 
 export default function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });

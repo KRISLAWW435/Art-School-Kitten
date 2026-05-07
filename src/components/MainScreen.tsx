@@ -7,14 +7,16 @@ import { ShopModal } from './ShopModal';
 import { CatchMouseGame, DrawingGame, MemoryMatchGame } from './MiniGames';
 import TutorialOverlay from './TutorialOverlay';
 
-const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.webp?raw=true';
-const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.webp?raw=true';
-const purringCatImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp?raw=true';
+const bgImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg/bg1.webp';
+const catImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp';
+const purringCatImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp';
 
 if (typeof window !== 'undefined') {
   const purringImg = new Image();
+  purringImg.referrerPolicy = "no-referrer";
   purringImg.src = purringCatImg;
   const catImage = new Image();
+  catImage.referrerPolicy = "no-referrer";
   catImage.src = catImg;
 }
 
@@ -248,6 +250,7 @@ export default function MainScreen() {
               <img 
                   src={(isPurring && !isSleeping) ? purringCatImg : catImg} 
                   alt="Randy the Kitten" 
+                  referrerPolicy="no-referrer"
                   className="w-[75vw] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto max-h-[50vh] md:max-h-full object-contain transition-transform duration-300 pointer-events-auto origin-bottom hover:scale-105"
                   style={{ 
                     filter: isSleeping ? 'brightness(0.7) sepia(0.3)' : 'drop-shadow(0 30px 40px rgba(0,0,0,0.3))',
