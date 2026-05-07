@@ -11,15 +11,6 @@ const bgImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/bg
 const catImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/cat.webp';
 const purringCatImg = 'https://raw.githubusercontent.com/KRISLAWW435/Cat-assets-/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp';
 
-if (typeof window !== 'undefined') {
-  const purringImg = new Image();
-  purringImg.referrerPolicy = "no-referrer";
-  purringImg.src = purringCatImg;
-  const catImage = new Image();
-  catImage.referrerPolicy = "no-referrer";
-  catImage.src = catImg;
-}
-
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4 }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number }) {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = Math.max(0, circumference - (value / 100) * circumference);
