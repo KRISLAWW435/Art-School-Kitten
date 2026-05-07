@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '../store/gameStore';
-import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Smile, Fish, Star, RotateCcw } from 'lucide-react';
+import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Smile, Fish, Star, RotateCcw, Palette, Puzzle } from 'lucide-react';
 import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
-import { CatchMouseGame } from './MiniGames';
+import { CatchMouseGame, DrawingGame, MemoryMatchGame } from './MiniGames';
 import TutorialOverlay from './TutorialOverlay';
 
 const bgImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/bg/bg1.webp?raw=true';
 const catImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/cat.webp?raw=true';
+const purringCatImg = 'https://github.com/KRISLAWW435/Cat-assets-/blob/main/cat/%D0%BC%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5.webp?raw=true';
+
+if (typeof window !== 'undefined') {
+  const purringImg = new Image();
+  purringImg.src = purringCatImg;
+  const catImage = new Image();
+  catImage.src = catImg;
+}
 
 function CircularProgress({ value, icon: Icon, colorClass, textClass, label, text, sizeClass = "w-16 h-16 md:w-20 md:h-20", radius = 28, strokeWidth = 4 }: { value: number, icon?: any, text?: React.ReactNode, colorClass: string, textClass: string, label: string, sizeClass?: string, radius?: number, strokeWidth?: number }) {
   const circumference = 2 * Math.PI * radius;
@@ -42,8 +50,12 @@ export default function MainScreen() {
   const { profile, coins, stats, isSleeping, pet, initializeSession, updateStats, level, xp, soundEnabled, toggleSound, resetGame } = useGameStore();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
-  const [activeMinigame, setActiveMinigame] = useState<'mouse' | null>(null);
+  const [activeMinigame, setActiveMinigame] = useState<'mouse' | 'draw' | 'puzzle' | null>(null);
+  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [particles, setParticles] = useState<{id: number, type: 'heart'|'smile', x: number, y: number, randomX: number, randomY: number, size: number}[]>([]);
+  const [isPurring, setIsPurring] = useState(false);
+  const purrTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
      initializeSession();
@@ -70,6 +82,38 @@ export default function MainScreen() {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
+  
+  const handleCatClick = () => {
+    if (!isSleeping) {
+      pet();
+      
+      const newParticles: any[] = [];
+      const particleCount = Math.floor(Math.random() * 8) + 3; // 3 to 10
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      
+      for (let i = 0; i < particleCount; i++) {
+        newParticles.push({
+          id: Date.now() + i + Math.random(),
+          type: Math.random() > 0.5 ? 'heart' : 'smile',
+          x: centerX,
+          y: centerY,
+          randomX: (Math.random() - 0.5) * 300, 
+          randomY: -150 - Math.random() * 250, 
+          size: 24 + Math.random() * 32, 
+        });
+      }
+      setParticles(prev => [...prev, ...newParticles]);
+      
+      setIsPurring(true);
+      if (purrTimeoutRef.current) {
+        clearTimeout(purrTimeoutRef.current);
+      }
+      purrTimeoutRef.current = setTimeout(() => {
+        setIsPurring(false);
+      }, 2000);
+    }
+  };
 
   const getLevelTitle = () => {
     if (profile.ageGroup === '5-7' || profile.ageGroup === '8-10') {
@@ -100,10 +144,10 @@ export default function MainScreen() {
       />
 
       {/* Main Layout Overlay */}
-      <div className="relative z-10 w-full h-full flex flex-col lg:flex-row overflow-hidden">
+      <div className="relative z-10 w-full h-full overflow-hidden">
         
-        {/* LEFT PANEL (Desktop: Column, Mobile: Absolute Top-Left) */}
-        <div className="flex flex-row lg:flex-col items-start lg:items-center justify-between lg:justify-start lg:w-24 p-4 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 shrink-0">
+        {/* LEFT PANEL (Desktop: Left border, Mobile: Top) */}
+        <div className="absolute top-0 left-0 right-0 lg:bottom-0 lg:right-auto lg:w-24 p-4 lg:p-6 lg:h-full pointer-events-none lg:bg-white/10 lg:backdrop-blur-md lg:border-r lg:border-white/20 flex flex-row lg:flex-col items-start lg:items-center justify-between lg:justify-start z-10">
           
           {/* Level Circle */}
           <div id="level-panel" className="pointer-events-auto lg:mt-0 mb-0 lg:mb-8">
@@ -196,13 +240,13 @@ export default function MainScreen() {
         </div>
 
         {/* CENTER AREA (KITTEN) */}
-        <div className="flex-1 flex flex-col items-center justify-center relative p-4 overflow-hidden">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-4 overflow-hidden z-30 pointer-events-none lg:px-24">
            <div 
-              className="relative cursor-pointer group lg:mt-24 max-h-full"
-              onClick={() => { if (!isSleeping) pet(); }}
+              className="relative cursor-pointer group mt-32 lg:mt-48 max-h-full pointer-events-auto"
+              onClick={handleCatClick}
            >
               <img 
-                  src={catImg} 
+                  src={(isPurring && !isSleeping) ? purringCatImg : catImg} 
                   alt="Randy the Kitten" 
                   className="w-[75vw] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto max-h-[50vh] md:max-h-full object-contain transition-transform duration-300 pointer-events-auto origin-bottom hover:scale-105"
                   style={{ 
@@ -221,8 +265,8 @@ export default function MainScreen() {
            </div>
         </div>
 
-        {/* RIGHT PANEL (Desktop: Column, Mobile: Absolute Bottom) */}
-        <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-between lg:w-24 p-3 lg:p-6 lg:h-full lg:bg-white/10 lg:backdrop-blur-md lg:border-l lg:border-white/20 shrink-0">
+        {/* RIGHT PANEL (Desktop: Right border, Mobile: Bottom) */}
+        <div className="absolute bottom-0 left-0 right-0 lg:top-0 lg:left-auto lg:w-24 p-3 lg:p-6 lg:h-full lg:bg-white/10 lg:backdrop-blur-md lg:border-l lg:border-white/20 pointer-events-none flex flex-row lg:flex-col items-center justify-between lg:justify-between z-20 pb-4 lg:pb-6">
           
           {/* Desktop Right Stack: Stats, MiniGames, Chat */}
           <div className="hidden lg:flex flex-col items-center gap-6 pointer-events-auto">
@@ -236,7 +280,7 @@ export default function MainScreen() {
 
              <button 
                id="games-button"
-               onClick={() => setActiveMinigame('mouse')}
+               onClick={() => setIsGameSelectorOpen(true)}
                className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg hover:bg-emerald-600 transition-all hover:scale-110 active:scale-95"
              >
                <Gamepad2 size={28} />
@@ -260,7 +304,7 @@ export default function MainScreen() {
              </div>
              
              <div className="flex gap-3">
-                <button id="games-button-mobile" onClick={() => setActiveMinigame('mouse')} className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><Gamepad2 size={28}/></button>
+                <button id="games-button-mobile" onClick={() => setIsGameSelectorOpen(true)} className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><Gamepad2 size={28}/></button>
                 <button id="chat-button-mobile" onClick={() => setIsChatOpen(true)} className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md active:scale-90 transition-transform"><MessageCircle size={28}/></button>
              </div>
           </div>
@@ -277,9 +321,92 @@ export default function MainScreen() {
       </AnimatePresence>
 
       {isShopOpen && <ShopModal onClose={() => setIsShopOpen(false)} />}
+      
+      {/* Game Selector Modal */}
+      <AnimatePresence>
+        {isGameSelectorOpen && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[2rem] shadow-2xl p-8 w-full max-w-xl relative border-4 border-emerald-400"
+            >
+              <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Выбери игру 🎮</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button 
+                  onClick={() => { setActiveMinigame('mouse'); setIsGameSelectorOpen(false); }}
+                  className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 transition-all hover:scale-105"
+                >
+                  <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                    <Gamepad2 size={32} />
+                  </div>
+                  <span className="font-bold text-blue-900">Поймай мышку</span>
+                </button>
+
+                <button 
+                  onClick={() => { setActiveMinigame('draw'); setIsGameSelectorOpen(false); }}
+                  className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-200 transition-all hover:scale-105"
+                >
+                  <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                    <Palette size={32} />
+                  </div>
+                  <span className="font-bold text-emerald-900">Рисование</span>
+                </button>
+
+                <button 
+                  onClick={() => { setActiveMinigame('puzzle'); setIsGameSelectorOpen(false); }}
+                  className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-purple-50 hover:bg-purple-100 border-2 border-purple-200 transition-all hover:scale-105"
+                >
+                  <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                    <Puzzle size={32} />
+                  </div>
+                  <span className="font-bold text-purple-900">Пары</span>
+                </button>
+              </div>
+              <button 
+                onClick={() => setIsGameSelectorOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <RotateCcw size={24} className="rotate-45" />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {activeMinigame === 'mouse' && <CatchMouseGame onClose={() => setActiveMinigame(null)} />}
+      {activeMinigame === 'draw' && <DrawingGame onClose={() => setActiveMinigame(null)} />}
+      {activeMinigame === 'puzzle' && <MemoryMatchGame onClose={() => setActiveMinigame(null)} />}
 
       <TutorialOverlay />
+
+      {/* Floating Particles Overlay */}
+      <AnimatePresence>
+        {particles.map(p => (
+          <motion.div
+            key={p.id}
+            initial={{ x: p.x, y: p.y, opacity: 1, scale: 0.5 }}
+            animate={{ 
+              x: p.x + p.randomX, 
+              y: p.y + p.randomY, 
+              opacity: 0, 
+              scale: 1.5 
+            }}
+            transition={{ duration: 2 + Math.random() * 1.5, ease: "easeOut" }}
+            onAnimationComplete={() => setParticles(prev => prev.filter(particle => particle.id !== p.id))}
+            className="fixed z-40 pointer-events-none drop-shadow-md select-none"
+            style={{ 
+              left: 0, 
+              top: 0, 
+              fontSize: p.size,
+              transformOrigin: 'center center'
+            }}
+          >
+            {p.type === 'heart' ? '❤️' : '😊'}
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
     </motion.div>
   );

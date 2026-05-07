@@ -184,20 +184,37 @@ export function processUserMessage(text: string) {
     } else {
       // LEGACY CONTENT STRUCTURE
       const themeData = themeObj.content;
-      // Resolve age group or fallback to '*'
-      let ageResponses = themeData["*"];
-      if (!ageResponses) {
-        if (ageGroup === "5-7" || ageGroup === "8-10" || ageGroup === "11-14") {
-          ageResponses =
-            themeData[ageGroup] || themeData["5-14"] || themeData["8-10"];
+      if (!themeData) {
+        response = "Мяу! Это так интересно! ✨";
+      } else {
+        // Handle themeData.variants if it exists
+        const root = themeData.variants || themeData;
+        
+        // Resolve age group or fallback to '*'
+        let ageResponses = root["*"];
+        if (!ageResponses) {
+          if (ageGroup === "5-7" || ageGroup === "8-10" || ageGroup === "11-14") {
+            ageResponses =
+              root[ageGroup] || root["5-14"] || root["8-10"];
+          } else {
+            ageResponses =
+              root[ageGroup] || root["15-18+"] || root["18+"];
+          }
+        }
+        
+        if (!ageResponses) {
+          const allValues = Object.values(root);
+          if (allValues.length > 0 && Array.isArray(allValues[0])) {
+            ageResponses = allValues[0] as string[];
+          }
+        }
+
+        if (ageResponses && Array.isArray(ageResponses) && ageResponses.length > 0) {
+          response = getRandom(ageResponses);
         } else {
-          ageResponses =
-            themeData[ageGroup] || themeData["15-18+"] || themeData["18+"];
+          response = "Мяу! Даже не знаю, что сказать. 🐾";
         }
       }
-      if (!ageResponses) ageResponses = Object.values(themeData)[0] as string[]; // Ultimate fallback
-
-      response = getRandom(ageResponses as string[]);
     }
     
     // Set active context if theme expects it
@@ -226,18 +243,30 @@ export function processUserMessage(text: string) {
     matchedTheme !== "goodbye"
   ) {
     if (Math.random() < 0.15) {
-      const jokes = DIALOGUE_DATA.themes.joke.content["*"];
-      const rJoke = getRandom(jokes);
-      const jokePrefixes = [
-        "Шутка-минутка:",
-        "Лови шутку! 😸",
-        "Кстати, вспомнил смешное! 🎉",
-        "А вот и прикол для поднятия настроения: 🐾",
-        "Срочные новости! Шутка дня! 😹",
-        "Мур-мяу, смешная мысль вслух! ✨",
-      ];
-      const prefix = getRandom(jokePrefixes);
-      response += `\n\n${prefix} ${rJoke}`;
+      const jokeTheme = DIALOGUE_DATA.themes.joke as any;
+      let jokeList: string[] = [];
+      
+      if (jokeTheme.slots?.content?.variants?.["*"]) {
+        jokeList = jokeTheme.slots.content.variants["*"];
+      } else if (jokeTheme.content?.variants?.["*"]) {
+        jokeList = jokeTheme.content.variants["*"];
+      } else if (jokeTheme.content?.["*"]) {
+        jokeList = jokeTheme.content["*"];
+      }
+
+      if (jokeList.length > 0) {
+        const rJoke = getRandom(jokeList);
+        const jokePrefixes = [
+          "Шутка-минутка:",
+          "Лови шутку! 😸",
+          "Кстати, вспомнил смешное! 🎉",
+          "А вот и прикол для поднятия настроения: 🐾",
+          "Срочные новости! Шутка дня! 😹",
+          "Мур-мяу, смешная мысль вслух! ✨",
+        ];
+        const prefix = getRandom(jokePrefixes);
+        response += `\n\n${prefix} ${rJoke}`;
+      }
     }
   }
 
