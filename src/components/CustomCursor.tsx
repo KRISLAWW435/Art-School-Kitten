@@ -1,82 +1,88 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, useMotionValue, useSpring } from 'motion/react';
-import { getAssetUrl } from '../utils/assets';
-
-const pawPointer = getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw2.webp');
-const pawStatic = getAssetUrl('cat/%D0%BB%D0%B0%D0%BF%D0%BA%D0%B0/paw1.webp');
 
 export default function CustomCursor() {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isPointer, setIsPointer] = useState(false);
+  
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
 
-  const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
+  const springConfig = { damping: 25, stiffness: 400, mass: 0.5 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
-  const [isPointer, setIsPointer] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
   useEffect(() => {
-    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-      setIsTouchDevice(true);
-      return;
-    }
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX - 24);
-      mouseY.set(e.clientY - 12);
-      setIsVisible(true);
+    // Center it initially so it's not totally invisible before moving
+    mouseX.set(window.innerWidth / 2);
+    mouseY.set(window.innerHeight / 2);
 
-      const target = e.target as HTMLElement;
-      const isClickable = 
-        target.tagName === 'A' || 
-        target.tagName === 'BUTTON' || 
-        target.closest('button') || 
-        target.closest('a') || 
-        window.getComputedStyle(target).cursor === 'pointer';
+    const moveCursor = (e: MouseEvent | TouchEvent) => {
+      let clientX = 0;
+      let clientY = 0;
       
-      setIsPointer(!!isClickable);
+      if ('touches' in e && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if ('clientX' in e) {
+        clientX = (e as MouseEvent).clientX;
+        clientY = (e as MouseEvent).clientY;
+      } else {
+        return;
+      }
+
+      mouseX.set(clientX);
+      mouseY.set(clientY);
+      
+      if (!isVisible) setIsVisible(true);
+      
+      const target = e.target as HTMLElement;
+      if (target) {
+        const computedCursor = window.getComputedStyle(target).cursor;
+        const parentTag = target.closest('a, button, [role="button"], input, select');
+        setIsPointer(computedCursor === 'pointer' || !!parentTag);
+      }
     };
 
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('touchmove', moveCursor, { passive: true });
+    window.addEventListener('touchstart', moveCursor, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('touchmove', moveCursor);
+      window.removeEventListener('touchstart', moveCursor);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
     };
-  }, []);
+  }, [mouseX, mouseY, isVisible]);
 
-  if (isTouchDevice || !isVisible) return null;
+  if (!isVisible || typeof document === 'undefined') return null;
 
-  return (
+  return createPortal(
     <motion.div
-      className="fixed top-0 left-0 z-[9999] pointer-events-none hidden lg:block will-change-transform"
+      className="fixed top-0 left-0 pointer-events-none z-[999999]"
       style={{
         x: cursorX,
         y: cursorY,
-      }}
-      animate={{
-        scale: isPointer ? 1.2 : 1,
-      }}
-      transition={{
-        type: 'spring',
-        damping: 25,
-        stiffness: 250,
-        mass: 0.5,
+        translateX: '-50%',
+        translateY: '-50%'
       }}
     >
-      <img
-        src={isPointer ? pawPointer : pawStatic}
-        alt="cursor"
-        className="w-24 h-24 object-contain"
-        referrerPolicy="no-referrer"
-      />
-    </motion.div>
+      <div 
+        className="relative flex items-center justify-center transition-transform duration-200"
+        style={{ transform: isPointer ? 'scale(1.2)' : 'scale(1)' }}
+      >
+        <div className="w-8 h-8 bg-emerald-500/80 rounded-full blur-[2px] absolute shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
+        <div className="w-4 h-4 bg-white rounded-full relative z-10" />
+      </div>
+    </motion.div>,
+    document.body
   );
 }

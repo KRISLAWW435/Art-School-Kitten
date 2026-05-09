@@ -1,44 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useGameStore } from '../store/gameStore';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { getAssetUrl } from '../utils/assets';
 
 const catImg = getAssetUrl('cat/cat.webp');
 
 export const RandyCat = () => {
-   const { stats, isSleeping, pet, addMessage, addCoins } = useGameStore();
-   const clickCount = useRef(0);
-   const [hearts, setHearts] = useState<{id:number, x:number, y:number}[]>([]);
-
-   const handlePet = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (isSleeping) return;
-      
-      pet();
-      clickCount.current++;
-      
-      // Floating heart effect
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const heartId = Date.now() + Math.random();
-      setHearts(prev => [...prev, { id: heartId, x, y }]);
-      setTimeout(() => setHearts(prev => prev.filter(h => h.id !== heartId)), 1000); // Wait for transition
-
-      // Bonus milestone
-      if (clickCount.current % 20 === 0) {
-         addCoins(10);
-         addMessage({ sender: 'randy', text: 'Мррррр... Какой прекрасный массаж! +10 Рекоинов! 💰💖' });
-         confetti({
-             particleCount: 40,
-             spread: 60,
-             origin: { y: 0.6 },
-             colors: ['#f472b6', '#fbbf24', '#ffffff']
-         });
-      }
-   };
-
+   const { stats, isSleeping } = useGameStore();
+   
    // Determine animation based on stats
    let yAnim = [0, -8, 0];
    let duration = 3;
@@ -55,12 +25,11 @@ export const RandyCat = () => {
    }
 
    return (
-       <div className="relative w-full h-full flex flex-col items-center justify-center">
+       <div className="relative w-full h-full flex flex-col items-center justify-center pointer-events-none">
            <motion.div
                animate={{ y: yAnim }}
                transition={{ repeat: Infinity, duration, ease: "easeInOut" }}
-               className="relative cursor-pointer group will-change-transform"
-               onClick={handlePet}
+               className="relative group will-change-transform pointer-events-none"
            >
                <img 
                    src={catImg} 
@@ -72,26 +41,10 @@ export const RandyCat = () => {
 
                {/* Zzz animation */}
                {isSleeping && (
-                   <div className="absolute -top-10 right-4 text-slate-400 font-bold text-3xl font-mono animate-bounce opacity-80">
+                   <div className="absolute -top-10 right-4 text-slate-400 font-bold text-3xl font-mono animate-bounce opacity-80 pointer-events-none">
                        Zzz...
                    </div>
                )}
-
-               {/* Floating Hearts */}
-               <AnimatePresence>
-                   {hearts.map(h => (
-                       <motion.div
-                           key={h.id}
-                           initial={{ opacity: 1, y: h.y, x: h.x, scale: 0.5 }}
-                           animate={{ opacity: 0, y: h.y - 100, scale: 1.5 }}
-                           exit={{ opacity: 0 }}
-                           transition={{ duration: 1 }}
-                           className="absolute text-pink-400 text-2xl font-bold pointer-events-none will-change-transform"
-                       >
-                           💖
-                       </motion.div>
-                   ))}
-               </AnimatePresence>
            </motion.div>
        </div>
    );

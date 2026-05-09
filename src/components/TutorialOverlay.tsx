@@ -166,7 +166,7 @@ export default function TutorialOverlay() {
           key={tutorialStep}
           initial={{ opacity: 0, y: tutorialStep > 0 && tutorialStep <= 3 ? 20 : -20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="relative z-[1020] bg-white p-5 md:p-9 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] w-full max-w-[340px] md:max-w-lg pointer-events-auto cursor-none border-2 border-white/50"
+          className="relative z-[1020] bg-white p-5 md:p-9 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] w-full max-w-[340px] md:max-w-lg pointer-events-auto border-2 border-white/50"
         >
           <p className="text-slate-800 font-bold text-lg md:text-2xl leading-snug text-center">
              {displayText}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGameStore } from '../store/gameStore';
-import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Smile, Fish, Star, RotateCcw, Palette, Puzzle } from 'lucide-react';
+import { MessageCircle, Gamepad2, ShoppingBag, Zap, Coins, Volume2, VolumeX, Maximize, Minimize, Palette, Puzzle, RotateCcw, Smile, Fish, Heart } from 'lucide-react';
 import { ChatModal } from './ChatModal';
 import { ShopModal } from './ShopModal';
 import { CatchMouseGame, DrawingGame, MemoryMatchGame } from './MiniGames';
@@ -47,9 +47,53 @@ export default function MainScreen() {
   const [activeMinigame, setActiveMinigame] = useState<'mouse' | 'draw' | 'puzzle' | null>(null);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [particles, setParticles] = useState<{id: number, type: 'heart'|'smile', x: number, y: number, randomX: number, randomY: number, size: number}[]>([]);
+  const [particles, setParticles] = useState<{id: number, x: number, y: number, randomX: number, randomY: number, size: number}[]>([]);
   const [isPurring, setIsPurring] = useState(false);
   const purrTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize the regular audio file
+  useEffect(() => {
+    const audio = new Audio('/bubble.mp3');
+    audio.volume = 0.5;
+    audio.preload = 'auto';
+    audioRef.current = audio;
+    
+    return () => {
+      audio.pause();
+      audio.src = '';
+    };
+  }, []);
+
+  // Unlock audio for strict browsers
+  useEffect(() => {
+    const unlockAudio = () => {
+      const audio = audioRef.current;
+      if (audio && audio.paused) {
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }).catch(() => {});
+      }
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    };
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+    
+    return () => {
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    };
+  }, []);
+
+  const playBubbleSound = () => {
+    if (!soundEnabled || !audioRef.current) return;
+    const audio = audioRef.current;
+    audio.currentTime = 0;
+    audio.play().catch(e => console.log('Audio play error:', e));
+  };
 
   useEffect(() => {
      initializeSession();
@@ -77,35 +121,50 @@ export default function MainScreen() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
   
+  const clickCountRef = useRef(0);
+
   const handleCatClick = () => {
     if (!isSleeping) {
       pet();
+      clickCountRef.current++;
       
-      const newParticles: any[] = [];
-      const particleCount = Math.floor(Math.random() * 8) + 3; // 3 to 10
+      // 🔈 Воспроизведение звука пузырька
+      playBubbleSound();
+
+      // Создаём только 2 сердечка
+      const newParticles = [];
+      const particleCount = 2;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
       
       for (let i = 0; i < particleCount; i++) {
         newParticles.push({
           id: Date.now() + i + Math.random(),
-          type: Math.random() > 0.5 ? 'heart' : 'smile',
           x: centerX,
           y: centerY,
-          randomX: (Math.random() - 0.5) * 300, 
-          randomY: -150 - Math.random() * 250, 
-          size: 24 + Math.random() * 32, 
+          randomX: (Math.random() - 0.5) * 200,
+          randomY: -(Math.random() * 150 + 50),
+          size: Math.random() * 20 + 20
         });
       }
+      
       setParticles(prev => [...prev, ...newParticles]);
       
       setIsPurring(true);
-      if (purrTimeoutRef.current) {
-        clearTimeout(purrTimeoutRef.current);
+      if (purrTimeoutRef.current) clearTimeout(purrTimeoutRef.current);
+      purrTimeoutRef.current = setTimeout(() => setIsPurring(false), 2000);
+
+      // Bonus milestone
+      if (clickCountRef.current % 20 === 0) {
+         addCoins(10);
+         addMessage({ sender: 'randy', text: 'Мррррр... Какой прекрасный массаж! +10 Рекоинов! 💰💖' });
+         confetti({
+             particleCount: 40,
+             spread: 60,
+             origin: { y: 0.6 },
+             colors: ['#f472b6', '#fbbf24', '#ffffff']
+         });
       }
-      purrTimeoutRef.current = setTimeout(() => {
-        setIsPurring(false);
-      }, 2000);
     }
   };
 
@@ -326,7 +385,7 @@ export default function MainScreen() {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-[2rem] shadow-2xl p-8 w-full max-w-xl relative border-4 border-emerald-400"
             >
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Выбери игру 🎮</h2>
+              <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Выбери игру</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button 
                   onClick={() => { setActiveMinigame('mouse'); setIsGameSelectorOpen(false); }}
@@ -375,7 +434,6 @@ export default function MainScreen() {
 
       <TutorialOverlay />
 
-      {/* Floating Particles Overlay */}
       <AnimatePresence>
         {particles.map(p => (
           <motion.div
@@ -387,17 +445,16 @@ export default function MainScreen() {
               opacity: 0, 
               scale: 1.5 
             }}
-            transition={{ duration: 2 + Math.random() * 1.5, ease: "easeOut" }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
             onAnimationComplete={() => setParticles(prev => prev.filter(particle => particle.id !== p.id))}
-            className="fixed z-40 pointer-events-none drop-shadow-md select-none"
+            className="fixed z-40 pointer-events-none drop-shadow-md select-none will-change-transform"
             style={{ 
               left: 0, 
               top: 0, 
-              fontSize: p.size,
               transformOrigin: 'center center'
             }}
           >
-            {p.type === 'heart' ? '❤️' : '😊'}
+            <Heart size={p.size} fill="#ef4444" color="#ef4444" />
           </motion.div>
         ))}
       </AnimatePresence>

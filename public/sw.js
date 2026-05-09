@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kitten-game-cache-v2';
+const CACHE_NAME = 'kitten-game-cache-v3';
 const PRECACHE_URLS = [
   'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/cat/cat2.webp',
   'https://cdn.jsdelivr.net/gh/KRISLAWW435/Cat-assets-@main/bg/bgst.webp',

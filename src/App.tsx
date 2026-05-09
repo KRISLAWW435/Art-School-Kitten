@@ -82,7 +82,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans overflow-hidden relative">
-      <CustomCursor />
       <AnimatePresence mode="wait">
         {stage === 'loading' && (
           <motion.div 
@@ -117,6 +116,7 @@ export default function App() {
           <MainScreen />
         )}
       </AnimatePresence>
+      <CustomCursor />
     </div>
   );
 }
